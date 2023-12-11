@@ -38,7 +38,7 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
     int maxWidth = 100;
     int maxHeight = 100;
     int x = 45, y = 10;
-    String[] textureNames = { "Eboot.png", "Eplane.png", "back22.png", "plane_left.png", "plane_normal.png",
+    String[] textureNames = { "Eboot.png", "Eplane.png", "back.png", "plane_left.png", "plane_normal.png",
             "plane_right.png", "house.png", "bullet.png", "full.png", "startback.png" };
     TextureReader.Texture[] texture = new TextureReader.Texture[textureNames.length];
     int[] textures = new int[textureNames.length];

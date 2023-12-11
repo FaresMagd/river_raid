@@ -12,7 +12,7 @@ public class RiverRaid extends JFrame {
         GLCanvas glcanvas;
         Animator animator;
 
-        GameListener listener = new GameGLEventListener();
+        RiverRaidListener listener = new RiverRaidGLEventListener();
         glcanvas = new GLCanvas();
         glcanvas.addGLEventListener(listener);
 

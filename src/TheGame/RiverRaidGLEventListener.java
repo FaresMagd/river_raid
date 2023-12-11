@@ -10,10 +10,9 @@ import javax.media.opengl.glu.GLU;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.util.ArrayList;
 
 
-public class GameGLEventListener extends GameListener {
+public class RiverRaidGLEventListener extends RiverRaidListener {
 
 
     int xBullet;
@@ -104,7 +103,7 @@ public class GameGLEventListener extends GameListener {
 
         gl.glDisable(GL.GL_BLEND);
     }
-    
+
 
     public void DrawBackground(GL gl) {
         gl.glEnable(GL.GL_BLEND);

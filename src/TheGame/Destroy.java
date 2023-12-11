@@ -66,8 +66,12 @@ public class Destroy {
         if (g.x < 20) {
             g.crashed();
         }
-
-
+        for (Object1 full : g.fulls) {
+            if (g.x > full.x - 2 && g.x < full.x + 2 && g.y > full.y - 8 && g.y < full.y + 5) {
+                g.tank += 2;
+                g.tank = Math.min(g.tank, 100);
+            }
+        }
     }
 
     public static double calcD(int x1, int x2, int y1, int y2) {

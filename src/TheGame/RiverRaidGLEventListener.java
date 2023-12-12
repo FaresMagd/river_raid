@@ -3,6 +3,7 @@ package TheGame;
 import Texture.TextureReader;
 import com.sun.opengl.util.GLUT;
 import com.sun.opengl.util.j2d.TextRenderer;
+import models.GameObject;
 import models.HighScoreDTO;
 
 import javax.media.opengl.GL;
@@ -48,10 +49,10 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
     public BitSet keyBits = new BitSet(256);
 
     int score;
-    ArrayList<GameObject> plans = new ArrayList<>();
-    ArrayList<GameObject> ships = new ArrayList<>();
-    ArrayList<GameObject> homes = new ArrayList<>();
-    ArrayList<GameObject> fulls = new ArrayList<>();
+    public ArrayList<GameObject> plans = new ArrayList<>();
+    public ArrayList<GameObject> ships = new ArrayList<>();
+    public ArrayList<GameObject> homes = new ArrayList<>();
+    public ArrayList<GameObject> fulls = new ArrayList<>();
 
     int xBullet;
     int yBullet;

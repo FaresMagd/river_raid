@@ -1,5 +1,7 @@
 package TheGame;
 
+import models.GameObject;
+
 public class Destroy {
 
     public static void remove(RiverRaidGLEventListener g) {

@@ -8,6 +8,7 @@ import models.HighScoreDTO;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import javax.swing.*;
 import java.awt.*;
@@ -21,8 +22,8 @@ import java.util.BitSet;
 import java.util.List;
 import java.util.Scanner;
 
-public class RiverRaidGLEventListener extends RiverRaidListener {
-
+public class RiverRaidGLEventListener extends KeyHandling implements GLEventListener {
+    String assetsFolderName = "Assets";
     JFrame gameJframe;
 
     public void setGameJframe(JFrame gameJframe) {

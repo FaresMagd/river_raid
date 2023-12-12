@@ -10,11 +10,18 @@ import javax.media.opengl.glu.GLU;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.List;
+import java.util.Scanner;
 
 public class RiverRaidGLEventListener extends RiverRaidListener {
+
+    String userName = null;
 
     GLUT g = new GLUT();
     public BitSet keyBits = new BitSet(256);
@@ -262,6 +269,7 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
         fulls = new ArrayList<>();
         if (lives == 0) {
             paused = true;
+            updateHighScore();
             String MSG = "Your score is " + score + " Do you want to play again";
             int RET = JOptionPane.showConfirmDialog(null, MSG, "Game Over!", JOptionPane.YES_NO_OPTION);
             if (RET == JOptionPane.YES_OPTION) {
@@ -271,6 +279,59 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
         if (lives > 0)
             starttemp = 0;
 
+    }
+
+    public void updateHighScore() {
+        List<Pair<String, Integer>> users = new ArrayList<>();
+        try {
+            File file = new File("src/Assets/high_score.txt");
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.isEmpty()) {
+                    break;
+                }
+                String[] parts = line.split(" ");
+                StringBuilder name = new StringBuilder();
+                int score = 0;
+                for (String part : parts) {
+                    if (part.length() > 1 && part.charAt(0) >= '0' && part.charAt(0) <= '9') {
+                        score = Integer.parseInt(part);
+                        break;
+                    }
+                    name.append(part).append(" ");
+                }
+                users.add(new Pair<>(name.toString(), score));
+            }
+            scanner.close();
+            if (userName != null) {
+                users.add(new Pair<>(userName, score));
+            }
+            try {
+
+                users.sort(new Pair.SecondElementComparator<>());
+                FileWriter myWriter = new FileWriter("src/Assets/high_score.txt");
+
+
+                int num = 1;
+                for (Pair<String, Integer> pair : users) {
+                    String first = pair.getFirst();
+                    Integer second = pair.getSecond();
+                    myWriter.write(first + " " + second + "\n");
+                    num++;
+                    if (num == 11) {
+                        break;
+                    }
+                }
+                myWriter.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } catch (FileNotFoundException err) {
+            err.printStackTrace();
+        }
     }
 
     public void newGame() {

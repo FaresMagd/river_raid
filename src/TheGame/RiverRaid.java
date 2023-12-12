@@ -6,6 +6,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 import javax.media.opengl.*;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -132,28 +134,55 @@ public class RiverRaid extends JFrame implements ActionListener {
                             "2) Hassan Fouad \n" +
                             "3) Hassan Adel \n" +
                             "4) Mostafa Elsabagh \n" +
-                            "5) Fares Maged \n"
+                            "5) Fares Magd \n",
+                    "CREATORS", JOptionPane.INFORMATION_MESSAGE
             );
         }
         if (e.getSource().equals(HOW_TO_PLAY)) {
             JOptionPane.showMessageDialog(this,
-                    "1) Use the left right button to move the plane \n"
-                            + "2) press Space to shoot bullets.\n"
-                            + "3) UP to make the game speed up\n"
-                            + "4) 100 points for hit ship\n "
-                            + "5) 50 points for hit plane\n "
-                            + "6) if hit fuel every enemy in it is zone will destroyed\n" + " and  you will git 30 points\n "
-                            + "7) Try to survive and overcome the enemy."
+                    "1) Use the left right button to move the plane. \n"
+                            + "2) Press Space to shoot bullets.\n"
+                            + "3) UP to make the game speed up.\n"
+                            + "4) 100 points for hit ship.\n "
+                            + "5) 50 points for hit plane.\n "
+                            + "6) If hit fuel every enemy in it is zone will destroyed\n" + " and  you will git 30 points.\n "
+                            + "7) Try to survive and overcome the enemy.",
+                    "HOW TO PLAY", JOptionPane.INFORMATION_MESSAGE
             );
         }
+
         if (e.getSource().equals(HIGH_SCORE)) {
             // HIGH SCORE DASHBOARD:
+            int i = 1;
+            StringBuilder message = new StringBuilder();
+            try {
+                File file = new File("src/Assets/high_score.txt");
+                Scanner scanner = new Scanner(file);
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    if (line.isEmpty()) {
+                        break;
+                    }
+                    message.append(i).append(") ").append(line).append("\n");
+                    i++;
+                }
+                scanner.close();
+                if (message.isEmpty()) {
+                    message.append("NO ONE HAS PLAYED YET!");
+                }
+                JOptionPane.showMessageDialog(this, message.toString(), "HIGH SCORES", JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (FileNotFoundException err) {
+                err.printStackTrace();
+            }
+
+
         }
+
         if (e.getSource().equals(EXIT)) {
             setVisible(false);
             CLIP.close();
         }
-
 
     }
 }

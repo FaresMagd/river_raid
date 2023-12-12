@@ -119,7 +119,7 @@ public class Levels extends JFrame implements ActionListener {
             if (PLAYER_NAME != null && PLAYER_NAME.length() != 0) {
                 int RET = JOptionPane.showConfirmDialog(this, MSG, "Ready MSG?", JOptionPane.YES_NO_OPTION);
                 if (RET == JOptionPane.YES_OPTION) {
-                    new Normal();
+                    new Normal(PLAYER_NAME);
                     setVisible(false);
                 }
 

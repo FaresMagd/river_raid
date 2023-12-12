@@ -12,11 +12,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Normal extends JFrame {
-    public Normal() {
+    public Normal(String userName) {
         GLCanvas glcanvas;
         Animator animator;
 
         RiverRaidGLEventListener listener = new RiverRaidGLEventListener();
+        listener.userName = userName;
         glcanvas = new GLCanvas();
         glcanvas.addGLEventListener(listener);
 

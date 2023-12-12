@@ -3,6 +3,7 @@ package TheGame;
 import Texture.TextureReader;
 import com.sun.opengl.util.GLUT;
 import com.sun.opengl.util.j2d.TextRenderer;
+import models.HighScoreDTO;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
@@ -282,7 +283,7 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
     }
 
     public void updateHighScore() {
-        List<Pair<String, Integer>> users = new ArrayList<>();
+        List<HighScoreDTO> users = new ArrayList<HighScoreDTO>();
         try {
             File file = new File("src/Assets/high_score.txt");
             Scanner scanner = new Scanner(file);
@@ -301,22 +302,22 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
                     }
                     name.append(part).append(" ");
                 }
-                users.add(new Pair<>(name.toString(), score));
+                users.add(new HighScoreDTO(name.toString(), score));
             }
             scanner.close();
             if (userName != null) {
-                users.add(new Pair<>(userName, score));
+                users.add(new HighScoreDTO(userName , score));
             }
             try {
 
-                users.sort(new Pair.SecondElementComparator<>());
+                users.sort((o1,o2)-> o2.score - o1.score);
                 FileWriter myWriter = new FileWriter("src/Assets/high_score.txt");
 
 
                 int num = 1;
-                for (Pair<String, Integer> pair : users) {
-                    String first = pair.getFirst();
-                    Integer second = pair.getSecond();
+                for (HighScoreDTO pair : users) {
+                    String first = pair.name;
+                    int second = pair.score;
                     myWriter.write(first + " " + second + "\n");
                     num++;
                     if (num == 11) {

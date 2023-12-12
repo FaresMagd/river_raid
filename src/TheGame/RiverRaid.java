@@ -167,7 +167,7 @@ public class RiverRaid extends JFrame implements ActionListener {
                     i++;
                 }
                 scanner.close();
-                if (message.isEmpty()) {
+                if (message.length() == 0) {
                     message.append("NO ONE HAS PLAYED YET!");
                 }
                 JOptionPane.showMessageDialog(this, message.toString(), "HIGH SCORES", JOptionPane.INFORMATION_MESSAGE);

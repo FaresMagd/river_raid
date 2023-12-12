@@ -6,30 +6,30 @@ public class CollisionManager {
 
     public static void remove(RiverRaidGLEventListener g) {
         int i = 0;
-        while (i < g.plans.size()) {
-            if (g.plans.get(i).remove) {
-                g.plans.remove(i);
+        while (i < g.gameState.plans.size()) {
+            if (g.gameState.plans.get(i).remove) {
+                g.gameState.plans.remove(i);
             }
             i++;
         }
 
         i = 0;
-        while (i < g.ships.size()) {
-            if (g.ships.get(i).remove) {
-                g.ships.remove(i);
+        while (i < g.gameState.ships.size()) {
+            if (g.gameState.ships.get(i).remove) {
+                g.gameState.ships.remove(i);
             }
             i++;
         }
-        while (i < g.homes.size()) {
-            if (g.homes.get(i).remove) {
-                g.homes.remove(i);
+        while (i < g.gameState.homes.size()) {
+            if (g.gameState.homes.get(i).remove) {
+                g.gameState.homes.remove(i);
             }
             i++;
         }
         i = 0;
-        while (i < g.fulls.size()) {
-            if (g.fulls.get(i).remove) {
-                g.fulls.remove(i);
+        while (i < g.gameState.fulls.size()) {
+            if (g.gameState.fulls.get(i).remove) {
+                g.gameState.fulls.remove(i);
             }
             i++;
         }
@@ -38,50 +38,50 @@ public class CollisionManager {
 
     public static void destroy(RiverRaidGLEventListener g) {
         double d;
-        for (GameObject plan : g.plans) {
-            d = calcD(plan.x, g.xBullet, plan.y, g.yBullet);
+        for (GameObject plan : g.gameState.plans) {
+            d = calcD(plan.x, g.gameState.xBullet, plan.y, g.gameState.yBullet);
 
-            if (g.fired && d < 7) {
+            if (g.gameState.fired && d < 7) {
                 plan.remove = true;
-                g.fired = false;
-                g.score += 50;
+                g.gameState.fired = false;
+                g.gameState.score += 50;
             }
-            d = calcD(plan.x, g.x, plan.y, g.y);
+            d = calcD(plan.x, g.gameState.x, plan.y, g.gameState.y);
 
             if (d < 7) {
                 g.crashed();
             }
         }
-        for (GameObject ship : g.ships) {
-            d = calcD(ship.x, g.xBullet, ship.y, g.yBullet);
-            if (g.fired && d < 7) {
+        for (GameObject ship : g.gameState.ships) {
+            d = calcD(ship.x, g.gameState.xBullet, ship.y, g.gameState.yBullet);
+            if (g.gameState.fired && d < 7) {
                 ship.remove = true;
-                g.fired = false;
-                g.score += 100;
+                g.gameState.fired = false;
+                g.gameState.score += 100;
             }
-            d = calcD(ship.x, g.x, ship.y, g.y);
+            d = calcD(ship.x, g.gameState.x, ship.y, g.gameState.y);
 
             if (d < 10) {
                 g.crashed();
             }
 
         }
-        if (g.x > 70) {
+        if (g.gameState.x > 70) {
             g.crashed();
         }
-        if (g.x < 20) {
+        if (g.gameState.x < 20) {
             g.crashed();
         }
-        for (GameObject full : g.fulls) {
-            if (g.x > full.x - 2 && g.x < full.x + 2 && g.y > full.y - 8 && g.y < full.y + 5) {
-                g.tank += 2;
-                g.tank = Math.min(g.tank, 100);
+        for (GameObject full : g.gameState.fulls) {
+            if (g.gameState.x > full.x - 2 && g.gameState.x < full.x + 2 && g.gameState.y > full.y - 8 && g.gameState.y < full.y + 5) {
+                g.gameState.tank += 2;
+                g.gameState.tank = Math.min(g.gameState.tank, 100);
 
             }
-            if (g.xBullet > full.x - 2 && g.xBullet < full.x + 2 && g.yBullet > full.y - 8 && g.yBullet < full.y + 5) {
+            if (g.gameState.xBullet > full.x - 2 && g.gameState.xBullet < full.x + 2 && g.gameState.yBullet > full.y - 8 && g.gameState.yBullet < full.y + 5) {
                 full.remove = true;
-                g.fired = false;
-                g.score += 100;
+                g.gameState.fired = false;
+                g.gameState.score += 100;
 
             }
         }

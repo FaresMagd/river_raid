@@ -22,7 +22,7 @@ public class Game extends JFrame {
         RiverRaidGLEventListener listener = new RiverRaidGLEventListener();
         listener.setGameJframe(this);
         listener.setSpeedFactor(speedFactor);
-        listener.userName = userName;
+        listener.setUserName(userName);
         glcanvas = new GLCanvas();
         glcanvas.addGLEventListener(listener);
 

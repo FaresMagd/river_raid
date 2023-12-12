@@ -1,9 +1,11 @@
 package TheGame;
 
+import Config.Constants;
 import Texture.TextureReader;
 import com.sun.opengl.util.GLUT;
 import com.sun.opengl.util.j2d.TextRenderer;
 import models.GameObject;
+import models.GameState;
 import models.HighScoreDTO;
 
 import javax.media.opengl.GL;
@@ -22,65 +24,27 @@ import java.util.BitSet;
 import java.util.List;
 import java.util.Scanner;
 
+import static Config.Constants.*;
+
 public class RiverRaidGLEventListener extends KeyHandling implements GLEventListener {
-    String assetsFolderName = "Assets";
     JFrame gameJframe;
+    GameState gameState;
 
     public void setGameJframe(JFrame gameJframe) {
         this.gameJframe = gameJframe;
+        this.gameState = new GameState();
     }
 
-    double speedFactor;
-
+    public void setUserName(String username){
+        this.gameState.userName = username;
+    }
     public void setSpeedFactor(double speedFactor) {
-        this.speedFactor = speedFactor;
+        this.gameState.speedFactor = speedFactor;
     }
-
-    public void setSpeed(double speed){
-        _speed = speed;
-    }
-
-    public int getSpeed(){
-        return (int) Math.ceil(_speed * speedFactor);
-    }
-
-    String userName = null;
 
     GLUT g = new GLUT();
     public BitSet keyBits = new BitSet(256);
 
-    int score;
-    public ArrayList<GameObject> plans = new ArrayList<>();
-    public ArrayList<GameObject> ships = new ArrayList<>();
-    public ArrayList<GameObject> homes = new ArrayList<>();
-    public ArrayList<GameObject> fulls = new ArrayList<>();
-
-    int xBullet;
-    int yBullet;
-    boolean paused;
-    int starttemp;
-    boolean flag;
-    long timeStart;
-    long currentTime;
-    private double _speed;
-
-    long tts;
-    long tte;
-    long fts;
-    long fte;
-    long pts;
-    long pte;
-    long hts;
-    long hte;
-    boolean fired;
-    int lives = 3;
-    int tank = 100;
-    int planeIndex = 4;
-    int maxWidth = 100;
-    int maxHeight = 100;
-    int x = 45, y = 10;
-    String[] textureNames = {"Eboot.png", "Eplane.png", "back.png", "plane_left.png", "plane_normal.png",
-            "plane_right.png", "house.png", "bullet.png", "full.png", "startback.png"};
     TextureReader.Texture[] texture = new TextureReader.Texture[textureNames.length];
     int[] textures = new int[textureNames.length];
 
@@ -97,7 +61,7 @@ public class RiverRaidGLEventListener extends KeyHandling implements GLEventList
 
         for (int i = 0; i < textureNames.length; i++) {
             try {
-                texture[i] = TextureReader.readTexture(assetsFolderName + "//" + textureNames[i], true);
+                texture[i] = TextureReader.readTexture(Constants.assetsFolderName + "//" + textureNames[i], true);
                 gl.glBindTexture(GL.GL_TEXTURE_2D, textures[i]);
 
                 // mipmapsFromPNG(gl, new GLU(), texture[i]);
@@ -116,11 +80,11 @@ public class RiverRaidGLEventListener extends KeyHandling implements GLEventList
         }
 
         long start = System.currentTimeMillis();
-        hts = start;
-        pts = start;
-        timeStart = start;
-        fts = start;
-        tte = start;
+        this.gameState.LastHomeGeneratedTime = start;
+        this.gameState.LastPlaneGenerateTime = start;
+        this.gameState.timeStart = start;
+        this.gameState.fts = start;
+        this.gameState.tte = start;
 
 
     }
@@ -134,7 +98,7 @@ public class RiverRaidGLEventListener extends KeyHandling implements GLEventList
         DrawBackground(gl);
         drawStart(gl);
 
-        if (!paused) {
+        if (!this.gameState.paused) {
             handleKeyPress();
             generateAPlaneOrShip();
             generateHome();
@@ -146,34 +110,34 @@ public class RiverRaidGLEventListener extends KeyHandling implements GLEventList
             emptyTank();
         }
         drawPlansAndShipsAndHomes(gl);
-        DrawSprite(gl, x, y, planeIndex, 0.8F, 0);
+        DrawSprite(gl, this.gameState.x, this.gameState.y, this.gameState.planeIndex, 0.8F, 0);
 
-        if (lives > 0)
-            currentTime = System.currentTimeMillis();
+        if (this.gameState.lives > 0)
+            this.gameState.currentTime = System.currentTimeMillis();
         gl.glRasterPos2f(-.8f, .9f);
         g.glutBitmapString(5, "Score ");
-        g.glutBitmapString(5, Integer.toString(score));
+        g.glutBitmapString(5, Integer.toString(this.gameState.score));
 
         gl.glRasterPos2f(-.8f, .8f);
         g.glutBitmapString(5, "Timer  ");
-        g.glutBitmapString(5, Long.toString((currentTime - timeStart) / 1000));
+        g.glutBitmapString(5, Long.toString((this.gameState.currentTime - this.gameState.timeStart) / 1000));
         g.glutBitmapString(5, " s");
 
         gl.glRasterPos2f(-.8f, .7f);
         g.glutBitmapString(5, "lives  ");
-        g.glutBitmapString(5, Integer.toString(lives));
+        g.glutBitmapString(5, Integer.toString(this.gameState.lives));
 
         gl.glRasterPos2f(-.8f, .6f);
         g.glutBitmapString(5, "tank  ");
-        g.glutBitmapString(5, Integer.toString(tank));
+        g.glutBitmapString(5, Integer.toString(this.gameState.tank));
         gl.glEnd();
         gl.glRasterPos2f(-.8f, .84f);
-        if (getSpeed() < 10)
-            setSpeed(2 + score / 4000);
-        starttemp++;
-        starttemp = Math.min(starttemp, 150);
-        if (fired) {
-            DrawSprite(gl, xBullet, yBullet, 7, 0.1f, 0);
+        if (this.gameState.getSpeed() < 10)
+            this.gameState.setSpeed(2 + this.gameState.score / 4000);
+        this.gameState.starttemp++;
+        this.gameState.starttemp = Math.min(this.gameState.starttemp, 150);
+        if (this.gameState.fired) {
+            DrawSprite(gl, this.gameState.xBullet, this.gameState.yBullet, 7, 0.1f, 0);
         }
     }
 
@@ -235,22 +199,22 @@ public class RiverRaidGLEventListener extends KeyHandling implements GLEventList
     }
 
     public void drawStart(GL gl) {
-        DrawSprite(gl, 45, 45 - starttemp, 9, 10, 0);
+        DrawSprite(gl, 45, 45 - this.gameState.starttemp, 9, 10, 0);
 
     }
 
     public void generateAPlaneOrShip() {
 
-        pte = System.currentTimeMillis();
-        if ((pte - pts) + getSpeed() * 200L > 1500) {
-            pts = pte;
+        this.gameState.pte = System.currentTimeMillis();
+        if (( this.gameState.pte -  this.gameState.LastPlaneGenerateTime) + this.gameState.getSpeed() * 200L > 1500) {
+            this.gameState.LastPlaneGenerateTime = this.gameState.pte;
             int temp = (int) (Math.random() * 44 + 23);
             double temp1 = Math.random();
             if (temp1 < 0.5) {
-                plans.add(new GameObject(temp, Math.random() > 0.5));
+                this.gameState.plans.add(new GameObject(temp, Math.random() > 0.5));
             }
             if (temp1 > 0.5) {
-                ships.add(new GameObject(temp, Math.random() > 0.5));
+                this.gameState.ships.add(new GameObject(temp, Math.random() > 0.5));
 
             }
         }
@@ -258,43 +222,43 @@ public class RiverRaidGLEventListener extends KeyHandling implements GLEventList
 
     public void generateFull() {
 
-        fte = System.currentTimeMillis();
-        if ((fte - fts) + getSpeed() * 200L > 5000) {
-            fts = fte;
+        this.gameState.fte = System.currentTimeMillis();
+        if ((this.gameState.fte - this.gameState.fts) + this.gameState.getSpeed() * 200L > 5000) {
+            this.gameState.fts = this.gameState.fte;
             int temp = (int) (Math.random() * 44 + 23);
-            fulls.add(new GameObject(temp, Math.random() > 0.5));
+            this.gameState.fulls.add(new GameObject(temp, Math.random() > 0.5));
         }
     }
 
     public void emptyTank() {
-        tte = System.currentTimeMillis();
-        if (tte - tts > 400) {
-            tts = tte;
+        this.gameState.tte = System.currentTimeMillis();
+        if (this.gameState.tte - this.gameState.tts > 400) {
+            this.gameState.tts = this.gameState.tte;
 
-            tank -= 1;
-            tank = Math.max(tank, 0);
+            this.gameState.tank -= 1;
+            this.gameState.tank = Math.max(this.gameState.tank, 0);
         }
     }
 
     public void checkTank() {
-        if (tank < 1) {
+        if (this.gameState.tank < 1) {
             crashed();
         }
     }
 
     public void crashed() {
-        x = 45;
-        y = 10;
-        tank = 100;
-        lives -= 1;
-        plans = new ArrayList<>();
-        ships = new ArrayList<>();
-        homes = new ArrayList<>();
-        fulls = new ArrayList<>();
-        if (lives == 0) {
-            paused = true;
+        this.gameState.x = 45;
+        this.gameState.y = 10;
+        this.gameState.tank = 100;
+        this.gameState.lives -= 1;
+        this.gameState.plans = new ArrayList<>();
+        this.gameState.ships = new ArrayList<>();
+        this.gameState.homes = new ArrayList<>();
+        this.gameState.fulls = new ArrayList<>();
+        if (this.gameState.lives == 0) {
+            this.gameState.paused = true;
             updateHighScore();
-            String MSG = "Your score is " + score + " Do you want to play again";
+            String MSG = "Your score is " + this.gameState.score + " Do you want to play again";
             int RET = JOptionPane.showConfirmDialog(null, MSG, "Game Over!", JOptionPane.YES_NO_OPTION);
             if (RET == JOptionPane.YES_OPTION) {
                 newGame();
@@ -304,8 +268,8 @@ public class RiverRaidGLEventListener extends KeyHandling implements GLEventList
 
             }
         }
-        if (lives > 0)
-            starttemp = 0;
+        if (this.gameState.lives > 0)
+            this.gameState.starttemp = 0;
 
     }
 
@@ -332,8 +296,8 @@ public class RiverRaidGLEventListener extends KeyHandling implements GLEventList
                 users.add(new HighScoreDTO(name.toString(), score));
             }
             scanner.close();
-            if (userName != null) {
-                users.add(new HighScoreDTO(userName , score));
+            if (this.gameState.userName != null) {
+                users.add(new HighScoreDTO(this.gameState.userName , this.gameState.score));
             }
             try {
 
@@ -363,39 +327,39 @@ public class RiverRaidGLEventListener extends KeyHandling implements GLEventList
     }
 
     public void newGame() {
-        lives = 3;
-        tank = 100;
-        score = 0;
-        flag = true;
-        plans = new ArrayList<>();
-        ships = new ArrayList<>();
-        homes = new ArrayList<>();
-        fulls = new ArrayList<>();
+        this.gameState.lives = 3;
+        this.gameState.tank = 100;
+        this.gameState.score = 0;
+        this.gameState.flag = true;
+        this.gameState.plans = new ArrayList<>();
+        this.gameState.ships = new ArrayList<>();
+        this.gameState.homes = new ArrayList<>();
+        this.gameState.fulls = new ArrayList<>();
         keyBits = new BitSet(256);
 
         long start = System.currentTimeMillis();
-        hts = start;
-        pts = start;
-        timeStart = start;
-        fts = start;
-        tte = start;
-        paused = false;
-        x = 45;
-        planeIndex = 4;
+        this.gameState.LastHomeGeneratedTime = start;
+        this.gameState.LastPlaneGenerateTime = start;
+        this.gameState.timeStart = start;
+        this.gameState.fts = start;
+        this.gameState.tte = start;
+        this.gameState.paused = false;
+        this.gameState.x = 45;
+        this.gameState.planeIndex = 4;
     }
 
     public void drawPlansAndShipsAndHomes(GL gl) {
 
-        for (GameObject plan : plans) {
+        for (GameObject plan : this.gameState.plans) {
             DrawSprite(gl, plan.x, plan.y, 1, 1, plan.left ? 0 : 180);
         }
-        for (GameObject ship : ships) {
+        for (GameObject ship : this.gameState.ships) {
             DrawSprite(gl, ship.x, ship.y, 0, 1, ship.left ? 180 : 0);
         }
-        for (GameObject home : homes) {
+        for (GameObject home : this.gameState.homes) {
             DrawSprite(gl, home.x, home.y, 6, 1.5f, home.left ? 0 : 180);
         }
-        for (GameObject full : fulls) {
+        for (GameObject full : this.gameState.fulls) {
             DrawSprite(gl, full.x, full.y, 8, 1, full.left ? 0 : 180);
         }
 
@@ -403,23 +367,23 @@ public class RiverRaidGLEventListener extends KeyHandling implements GLEventList
 
     public void generateHome() {
 
-        hte = System.currentTimeMillis();
-        if ((hte - hts) + getSpeed() * 300L > 3000) {
-            hts = hte;
+        this.gameState.hte = System.currentTimeMillis();
+        if ((this.gameState.hte - this.gameState.LastHomeGeneratedTime) + this.gameState.getSpeed() * 300L > 3000) {
+            this.gameState.LastHomeGeneratedTime = this.gameState.hte;
             int temp;
             if (Math.random() > 0.5) {
                 temp = (int) (Math.random() * 11 + 1);
             } else {
                 temp = (int) (Math.random() * 11 + 78);
             }
-            homes.add(new GameObject(temp, Math.random() > 0.5));
+            this.gameState.homes.add(new GameObject(temp, Math.random() > 0.5));
 
         }
     }
 
     public void changePos() {
-        for (GameObject plan : plans) {
-            plan.y -= getSpeed();
+        for (GameObject plan : this.gameState.plans) {
+            plan.y -= this.gameState.getSpeed();
             if (plan.y < 50) {
                 if (plan.left && plan.x > 67) {
                     plan.left = false;
@@ -437,8 +401,8 @@ public class RiverRaidGLEventListener extends KeyHandling implements GLEventList
                 plan.remove = true;
             }
         }
-        for (GameObject ship : ships) {
-            ship.y -= getSpeed();
+        for (GameObject ship : this.gameState.ships) {
+            ship.y -= this.gameState.getSpeed();
             if (ship.y < 50) {
                 if (ship.left && ship.x > 67) {
                     ship.left = false;
@@ -456,53 +420,53 @@ public class RiverRaidGLEventListener extends KeyHandling implements GLEventList
                 ship.remove = true;
             }
         }
-        for (GameObject home : homes) {
-            home.y -= getSpeed();
+        for (GameObject home : this.gameState.homes) {
+            home.y -= this.gameState.getSpeed();
             if (home.y < 0) {
                 home.remove = true;
             }
         }
-        for (GameObject full : fulls) {
-            full.y -= getSpeed();
+        for (GameObject full : this.gameState.fulls) {
+            full.y -= this.gameState.getSpeed();
             if (full.y < 0) {
                 full.remove = true;
             }
         }
-        if (fired) {
-            yBullet += 10;
+        if (this.gameState.fired) {
+            this.gameState.yBullet += 10;
         }
     }
 
     public void handleKeyPress() {
         if (isKeyPressed(KeyEvent.VK_LEFT)) {
-            if (x > 20) {
-                x -= 3;
-                planeIndex = 3;
+            if (this.gameState.x > 20) {
+                this.gameState.x -= 3;
+                this.gameState.planeIndex = 3;
             }
         } else if (isKeyPressed(KeyEvent.VK_RIGHT)) {
-            if (x < maxWidth - 30) {
-                x += 3;
-                planeIndex = 5;
+            if (this.gameState.x < maxWidth - 30) {
+                this.gameState.x += 3;
+                this.gameState.planeIndex = 5;
             }
         } else {
-            planeIndex = 4;
+            this.gameState.planeIndex = 4;
         }
         if (isKeyPressed(KeyEvent.VK_SPACE)) {
-            if (yBullet > 100 || !fired) {
-                xBullet = x;
-                yBullet = 10;
-                fired = true;
+            if (this.gameState.yBullet > 100 || !this.gameState.fired) {
+                this.gameState.xBullet = this.gameState.x;
+                this.gameState.yBullet = 10;
+                this.gameState.fired = true;
             }
         }
         if (isKeyPressed(KeyEvent.VK_UP)) {
-            setSpeed(getSpeed() + 2);
+            this.gameState.setSpeed(this.gameState.getSpeed() + 2);
         }
 
     }
 
     public void setPaused() {
-        if (isKeyPressed(KeyEvent.VK_P) && lives > 0) {
-            paused = !paused;
+        if (isKeyPressed(KeyEvent.VK_P) && this.gameState.lives > 0) {
+            this.gameState.paused = !this.gameState.paused;
         }
     }
 

@@ -36,7 +36,7 @@ public class Destroy {
 
     public static void destroy(RiverRaidGLEventListener g) {
         double d;
-        for (Object1 plan : g.plans) {
+        for (GameObject plan : g.plans) {
             d = calcD(plan.x, g.xBullet, plan.y, g.yBullet);
 
             if (g.fired && d < 7) {
@@ -50,7 +50,7 @@ public class Destroy {
                 g.crashed();
             }
         }
-        for (Object1 ship : g.ships) {
+        for (GameObject ship : g.ships) {
             d = calcD(ship.x, g.xBullet, ship.y, g.yBullet);
             if (g.fired && d < 7) {
                 ship.remove = true;
@@ -70,7 +70,7 @@ public class Destroy {
         if (g.x < 20) {
             g.crashed();
         }
-        for (Object1 full : g.fulls) {
+        for (GameObject full : g.fulls) {
             if (g.x > full.x - 2 && g.x < full.x + 2 && g.y > full.y - 8 && g.y < full.y + 5) {
                 g.tank += 2;
                 g.tank = Math.min(g.tank, 100);

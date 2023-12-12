@@ -10,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import javax.media.opengl.*;
 import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -125,7 +124,7 @@ public class RiverRaid extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource().equals(START)) {
-            new Levels();
+            new LevelsScreen();
             setVisible(false);
         }
         if (e.getSource().equals(CREATORS)) {

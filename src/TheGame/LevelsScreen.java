@@ -1,25 +1,22 @@
 package TheGame;
 
 
-import com.sun.opengl.util.*;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.media.opengl.*;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
-public class Levels extends JFrame implements ActionListener {
+public class LevelsScreen extends JFrame implements ActionListener {
 
     public static void main(String[] args) {
-        new Levels();
+        new LevelsScreen();
     }
 
     String PLAYER_NAME;
     JButton EASY, NORMAL, HARD, BACK, MULTIPLAYER;
 
-    public Levels() {
+    public LevelsScreen() {
         // The Buttons:
         EASY = new JButton("EASY");
         NORMAL = new JButton("NORMAL");
@@ -102,40 +99,13 @@ public class Levels extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource().equals(EASY)) {
-            PLAYER_NAME = JOptionPane.showInputDialog(this, "Enter Your Name");
-            String MSG = "HI " + PLAYER_NAME + " , Are You Ready?";
-            if (PLAYER_NAME != null && PLAYER_NAME.length() != 0) {
-                int RET = JOptionPane.showConfirmDialog(this, MSG, "Ready MSG?", JOptionPane.YES_NO_OPTION);
-                if (RET == JOptionPane.YES_OPTION) {
-                    // Game Code.
-                    System.out.println("EASY");
-                }
-
-            }
+            GetGameFromDifficulty(0.90);
         }
         if (e.getSource().equals(NORMAL)) {
-            PLAYER_NAME = JOptionPane.showInputDialog(this, "Enter Your Name");
-            String MSG = "HI " + PLAYER_NAME + " , Are You Ready?";
-            if (PLAYER_NAME != null && PLAYER_NAME.length() != 0) {
-                int RET = JOptionPane.showConfirmDialog(this, MSG, "Ready MSG?", JOptionPane.YES_NO_OPTION);
-                if (RET == JOptionPane.YES_OPTION) {
-                    new Normal(PLAYER_NAME);
-                    setVisible(false);
-                }
-
-            }
+            GetGameFromDifficulty(1);
         }
         if (e.getSource().equals(HARD)) {
-            PLAYER_NAME = JOptionPane.showInputDialog(this, "Enter Your Name");
-            String MSG = "HI " + PLAYER_NAME + " , Are You Ready?";
-            if (PLAYER_NAME != null && PLAYER_NAME.length() != 0) {
-                int RET = JOptionPane.showConfirmDialog(this, MSG, "Ready MSG?", JOptionPane.YES_NO_OPTION);
-                if (RET == JOptionPane.YES_OPTION) {
-                    // Game Code.
-                    System.out.println("HARD");
-                }
-
-            }
+            GetGameFromDifficulty(1.2);
         }
         if (e.getSource().equals(BACK)) {
             new RiverRaid();
@@ -144,4 +114,18 @@ public class Levels extends JFrame implements ActionListener {
 
 
     }
+
+    public void GetGameFromDifficulty(double speedFactor){
+        PLAYER_NAME = JOptionPane.showInputDialog(this, "Enter Your Name");
+        String MSG = "HI " + PLAYER_NAME + " , Are You Ready?";
+        if (PLAYER_NAME != null && !PLAYER_NAME.isEmpty()) {
+            int RET = JOptionPane.showConfirmDialog(this, MSG, "Ready MSG?", JOptionPane.YES_NO_OPTION);
+            if (RET == JOptionPane.YES_OPTION) {
+                new Game(PLAYER_NAME, speedFactor);
+                setVisible(false);
+            }
+
+        }
+    }
+
 }

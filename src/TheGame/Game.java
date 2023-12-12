@@ -11,12 +11,17 @@ import javax.media.opengl.GLCanvas;
 import javax.swing.*;
 import java.awt.*;
 
-public class Normal extends JFrame {
-    public Normal(String userName) {
+public class Game extends JFrame {
+    double speedFactor;
+
+    public Game(String userName, double speedFactor) {
+        this.speedFactor = speedFactor;
         GLCanvas glcanvas;
         Animator animator;
 
         RiverRaidGLEventListener listener = new RiverRaidGLEventListener();
+        listener.setGameJframe(this);
+        listener.setSpeedFactor(speedFactor);
         listener.userName = userName;
         glcanvas = new GLCanvas();
         glcanvas.addGLEventListener(listener);
@@ -34,10 +39,5 @@ public class Normal extends JFrame {
         setVisible(true);
         setFocusable(true);
         glcanvas.requestFocus();
-    }
-
-    public static void main(String[] args) {
-
-        new RiverRaid();
     }
 }

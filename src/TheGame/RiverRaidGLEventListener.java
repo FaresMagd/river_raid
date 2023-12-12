@@ -22,16 +22,36 @@ import java.util.Scanner;
 
 public class RiverRaidGLEventListener extends RiverRaidListener {
 
+    JFrame gameJframe;
+
+    public void setGameJframe(JFrame gameJframe) {
+        this.gameJframe = gameJframe;
+    }
+
+    double speedFactor;
+
+    public void setSpeedFactor(double speedFactor) {
+        this.speedFactor = speedFactor;
+    }
+
+    public void setSpeed(double speed){
+        _speed = speed;
+    }
+
+    public int getSpeed(){
+        return (int) Math.ceil(_speed * speedFactor);
+    }
+
     String userName = null;
 
     GLUT g = new GLUT();
     public BitSet keyBits = new BitSet(256);
 
     int score;
-    ArrayList<Object1> plans = new ArrayList<>();
-    ArrayList<Object1> ships = new ArrayList<>();
-    ArrayList<Object1> homes = new ArrayList<>();
-    ArrayList<Object1> fulls = new ArrayList<>();
+    ArrayList<GameObject> plans = new ArrayList<>();
+    ArrayList<GameObject> ships = new ArrayList<>();
+    ArrayList<GameObject> homes = new ArrayList<>();
+    ArrayList<GameObject> fulls = new ArrayList<>();
 
     int xBullet;
     int yBullet;
@@ -40,7 +60,8 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
     boolean flag;
     long timeStart;
     long currentTime;
-    int speed;
+    private double _speed;
+
     long tts;
     long tte;
     long fts;
@@ -145,8 +166,8 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
         g.glutBitmapString(5, Integer.toString(tank));
         gl.glEnd();
         gl.glRasterPos2f(-.8f, .84f);
-        if (speed < 10)
-            speed = 2 + score / 4000;
+        if (getSpeed() < 10)
+            setSpeed(2 + score / 4000);
         starttemp++;
         starttemp = Math.min(starttemp, 150);
         if (fired) {
@@ -219,15 +240,15 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
     public void generateAPlaneOrShip() {
 
         pte = System.currentTimeMillis();
-        if ((pte - pts) + speed * 200L > 1500) {
+        if ((pte - pts) + getSpeed() * 200L > 1500) {
             pts = pte;
             int temp = (int) (Math.random() * 44 + 23);
             double temp1 = Math.random();
             if (temp1 < 0.5) {
-                plans.add(new Object1(temp, Math.random() > 0.5));
+                plans.add(new GameObject(temp, Math.random() > 0.5));
             }
             if (temp1 > 0.5) {
-                ships.add(new Object1(temp, Math.random() > 0.5));
+                ships.add(new GameObject(temp, Math.random() > 0.5));
 
             }
         }
@@ -236,10 +257,10 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
     public void generateFull() {
 
         fte = System.currentTimeMillis();
-        if ((fte - fts) + speed * 200L > 5000) {
+        if ((fte - fts) + getSpeed() * 200L > 5000) {
             fts = fte;
             int temp = (int) (Math.random() * 44 + 23);
-            fulls.add(new Object1(temp, Math.random() > 0.5));
+            fulls.add(new GameObject(temp, Math.random() > 0.5));
         }
     }
 
@@ -275,6 +296,10 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
             int RET = JOptionPane.showConfirmDialog(null, MSG, "Game Over!", JOptionPane.YES_NO_OPTION);
             if (RET == JOptionPane.YES_OPTION) {
                 newGame();
+            } else {
+                this.gameJframe.setVisible(false);
+                new RiverRaid();
+
             }
         }
         if (lives > 0)
@@ -359,16 +384,16 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
 
     public void drawPlansAndShipsAndHomes(GL gl) {
 
-        for (Object1 plan : plans) {
+        for (GameObject plan : plans) {
             DrawSprite(gl, plan.x, plan.y, 1, 1, plan.left ? 0 : 180);
         }
-        for (Object1 ship : ships) {
+        for (GameObject ship : ships) {
             DrawSprite(gl, ship.x, ship.y, 0, 1, ship.left ? 180 : 0);
         }
-        for (Object1 home : homes) {
+        for (GameObject home : homes) {
             DrawSprite(gl, home.x, home.y, 6, 1.5f, home.left ? 0 : 180);
         }
-        for (Object1 full : fulls) {
+        for (GameObject full : fulls) {
             DrawSprite(gl, full.x, full.y, 8, 1, full.left ? 0 : 180);
         }
 
@@ -377,7 +402,7 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
     public void generateHome() {
 
         hte = System.currentTimeMillis();
-        if ((hte - hts) + speed * 300L > 3000) {
+        if ((hte - hts) + getSpeed() * 300L > 3000) {
             hts = hte;
             int temp;
             if (Math.random() > 0.5) {
@@ -385,14 +410,14 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
             } else {
                 temp = (int) (Math.random() * 11 + 78);
             }
-            homes.add(new Object1(temp, Math.random() > 0.5));
+            homes.add(new GameObject(temp, Math.random() > 0.5));
 
         }
     }
 
     public void changePos() {
-        for (Object1 plan : plans) {
-            plan.y -= speed;
+        for (GameObject plan : plans) {
+            plan.y -= getSpeed();
             if (plan.y < 50) {
                 if (plan.left && plan.x > 67) {
                     plan.left = false;
@@ -410,8 +435,8 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
                 plan.remove = true;
             }
         }
-        for (Object1 ship : ships) {
-            ship.y -= speed;
+        for (GameObject ship : ships) {
+            ship.y -= getSpeed();
             if (ship.y < 50) {
                 if (ship.left && ship.x > 67) {
                     ship.left = false;
@@ -429,14 +454,14 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
                 ship.remove = true;
             }
         }
-        for (Object1 home : homes) {
-            home.y -= speed;
+        for (GameObject home : homes) {
+            home.y -= getSpeed();
             if (home.y < 0) {
                 home.remove = true;
             }
         }
-        for (Object1 full : fulls) {
-            full.y -= speed;
+        for (GameObject full : fulls) {
+            full.y -= getSpeed();
             if (full.y < 0) {
                 full.remove = true;
             }
@@ -468,7 +493,7 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
             }
         }
         if (isKeyPressed(KeyEvent.VK_UP)) {
-            speed = speed + 2;
+            setSpeed(getSpeed() + 2);
         }
 
     }

@@ -13,7 +13,8 @@ public class LevelsScreen extends JFrame implements ActionListener {
         new LevelsScreen();
     }
 
-    String PLAYER_NAME;
+    String FirstPlayerName;
+    String SecondPlayerName;
     JButton EASY, NORMAL, HARD, BACK, MULTIPLAYER;
 
     public LevelsScreen() {
@@ -111,17 +112,35 @@ public class LevelsScreen extends JFrame implements ActionListener {
             new RiverRaid();
             setVisible(false);
         }
+        if (e.getSource().equals(MULTIPLAYER)) {
+            GetMultiplayerGame();
+        }
 
 
     }
 
     public void GetGameFromDifficulty(double speedFactor){
-        PLAYER_NAME = JOptionPane.showInputDialog(this, "Enter Your Name");
-        String MSG = "HI " + PLAYER_NAME + " , Are You Ready?";
-        if (PLAYER_NAME != null && !PLAYER_NAME.isEmpty()) {
+        FirstPlayerName = JOptionPane.showInputDialog(this, "Enter Your Name");
+        String MSG = "HI " + FirstPlayerName + " , Are You Ready?";
+        if (FirstPlayerName != null && !FirstPlayerName.isEmpty()) {
             int RET = JOptionPane.showConfirmDialog(this, MSG, "Ready MSG?", JOptionPane.YES_NO_OPTION);
             if (RET == JOptionPane.YES_OPTION) {
-                new Game(PLAYER_NAME, speedFactor);
+                new Game(FirstPlayerName, speedFactor);
+                setVisible(false);
+            }
+
+        }
+    }
+
+    public void GetMultiplayerGame (){
+        FirstPlayerName = JOptionPane.showInputDialog(this, "Enter First Player Name");
+        SecondPlayerName = JOptionPane.showInputDialog(this, "Enter Second Player Name");
+
+        String MSG = "HI " + FirstPlayerName + " , Are You Ready?";
+        if (FirstPlayerName != null && !FirstPlayerName.isEmpty() && SecondPlayerName != null && !SecondPlayerName.isEmpty() ) {
+            int RET = JOptionPane.showConfirmDialog(this, MSG, "Ready MSG?", JOptionPane.YES_NO_OPTION);
+            if (RET == JOptionPane.YES_OPTION) {
+                new Game(FirstPlayerName, SecondPlayerName);
                 setVisible(false);
             }
 

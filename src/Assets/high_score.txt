@@ -1,2 +1,5 @@
-fdsf 400
-fdsf  200
+hello  50
+hello 50
+asdasdas 0  0  0  0  0
+asdasdas 0  0  0  0
+asdasdas 0  0  0

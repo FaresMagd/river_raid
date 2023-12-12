@@ -29,7 +29,7 @@ import static Config.Constants.*;
 public class RiverRaidGLEventListener extends KeyHandling implements GLEventListener {
     JFrame gameJframe;
     GameState gameState;
-
+    GameState firstPlayer , SecondPlayer;
     public void setGameJframe(JFrame gameJframe) {
         this.gameJframe = gameJframe;
         this.gameState = new GameState();
@@ -247,6 +247,7 @@ public class RiverRaidGLEventListener extends KeyHandling implements GLEventList
     }
 
     public void crashed() {
+
         this.gameState.x = 45;
         this.gameState.y = 10;
         this.gameState.tank = 100;
@@ -256,6 +257,17 @@ public class RiverRaidGLEventListener extends KeyHandling implements GLEventList
         this.gameState.homes = new ArrayList<>();
         this.gameState.fulls = new ArrayList<>();
         if (this.gameState.lives == 0) {
+            if(this.gameState.isMultipalyer && this.gameState.currentPlayer == 1){
+                this.startSecondPlayer();
+                return;
+            } else if (this.gameState.isMultipalyer){
+                int firstPlayerScore = this.firstPlayer.score;
+                int secondPlayerScore = this.gameState.score;
+                String MSG = "first player score "+firstPlayerScore+" and second player score "+ secondPlayerScore+"\n the winner is "+(firstPlayerScore>secondPlayerScore?"first player":"second player");
+
+                int RET = JOptionPane.showConfirmDialog(null,MSG , "Game Over!", JOptionPane.YES_NO_OPTION);
+                return;
+            }
             this.gameState.paused = true;
             updateHighScore();
             String MSG = "Your score is " + this.gameState.score + " Do you want to play again";
@@ -493,4 +505,25 @@ public class RiverRaidGLEventListener extends KeyHandling implements GLEventList
         // don't care
     }
 
+    public void setSecondPlayer(String secondPlayerName) {
+        this.gameState.SecondPlayerUserName = secondPlayerName;
+    }
+
+    public void setMultiplayer(boolean b) {
+        this.gameState.isMultipalyer = true;
+    }
+
+    public void startSecondPlayer(){
+        this.firstPlayer = new GameState();
+        firstPlayer.currentPlayer = 1;
+        firstPlayer.userName = this.gameState.userName;
+        firstPlayer.score = this.gameState.score;
+        String secondPlayerName = this.gameState.SecondPlayerUserName;
+        this.gameState = new GameState();
+        this.gameState.userName = secondPlayerName;
+        this.gameState.currentPlayer = 2;
+        this.keyBits = new BitSet(256);
+        String MSG = "HI " + secondPlayerName + " , Are You Ready?";
+        int RET = JOptionPane.showConfirmDialog(null, MSG, "Ready MSG?", JOptionPane.YES_NO_OPTION);
+    }
 }

@@ -1,9 +1,27 @@
 package models;
 
+import TheGame.Game;
+
 import java.util.ArrayList;
 
 public class GameState {
+    public GameState(){
+        paused = false;
+        speedFactor = 1;
+        isMultipalyer = false;
+        long start = System.currentTimeMillis();
+        LastHomeGeneratedTime = start;
+        LastPlaneGenerateTime = start;
+        timeStart = start;
+        fts = start;
+        tte = start;
+    }
     public String userName = null;
+    public String SecondPlayerUserName;
+
+    public int currentPlayer = 1;
+    public boolean isMultipalyer = false;
+
     public int score;
     public ArrayList<GameObject> plans = new ArrayList<>();
     public ArrayList<GameObject> ships = new ArrayList<>();

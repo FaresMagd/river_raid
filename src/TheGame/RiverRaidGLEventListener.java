@@ -140,8 +140,8 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
             generateFull();
             changePos();
             checkTank();
-            Destroy.destroy(this);
-            Destroy.remove(this);
+            CollisionManager.destroy(this);
+            CollisionManager.remove(this);
             emptyTank();
         }
         drawPlansAndShipsAndHomes(gl);

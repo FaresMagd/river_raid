@@ -2,7 +2,7 @@ package TheGame;
 
 import models.GameObject;
 
-public class Destroy {
+public class CollisionManager {
 
     public static void remove(RiverRaidGLEventListener g) {
         int i = 0;

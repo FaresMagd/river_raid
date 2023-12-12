@@ -7,6 +7,7 @@ import com.sun.opengl.util.j2d.TextRenderer;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
@@ -16,6 +17,8 @@ import java.util.BitSet;
 public class RiverRaidGLEventListener extends RiverRaidListener {
 
     GLUT g = new GLUT();
+    public BitSet keyBits = new BitSet(256);
+
     int score;
     ArrayList<Object1> plans = new ArrayList<>();
     ArrayList<Object1> ships = new ArrayList<>();
@@ -45,8 +48,8 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
     int maxWidth = 100;
     int maxHeight = 100;
     int x = 45, y = 10;
-    String[] textureNames = { "Eboot.png", "Eplane.png", "back22.png", "plane_left.png", "plane_normal.png",
-            "plane_right.png", "house.png", "bullet.png", "full.png", "startback.png" };
+    String[] textureNames = {"Eboot.png", "Eplane.png", "back.png", "plane_left.png", "plane_normal.png",
+            "plane_right.png", "house.png", "bullet.png", "full.png", "startback.png"};
     TextureReader.Texture[] texture = new TextureReader.Texture[textureNames.length];
     int[] textures = new int[textureNames.length];
 
@@ -80,12 +83,14 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
                 e.printStackTrace();
             }
         }
+
         long start = System.currentTimeMillis();
         hts = start;
         pts = start;
         timeStart = start;
         fts = start;
         tte = start;
+
 
     }
 
@@ -251,13 +256,43 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
         y = 10;
         tank = 100;
         lives -= 1;
+        plans = new ArrayList<>();
+        ships = new ArrayList<>();
+        homes = new ArrayList<>();
+        fulls = new ArrayList<>();
         if (lives == 0) {
             paused = true;
-
+            String MSG = "Your score is " + score + " Do you want to play again";
+            int RET = JOptionPane.showConfirmDialog(null, MSG, "Game Over!", JOptionPane.YES_NO_OPTION);
+            if (RET == JOptionPane.YES_OPTION) {
+                newGame();
+            }
         }
         if (lives > 0)
             starttemp = 0;
 
+    }
+
+    public void newGame() {
+        lives = 3;
+        tank = 100;
+        score = 0;
+        flag = true;
+        plans = new ArrayList<>();
+        ships = new ArrayList<>();
+        homes = new ArrayList<>();
+        fulls = new ArrayList<>();
+        keyBits = new BitSet(256);
+
+        long start = System.currentTimeMillis();
+        hts = start;
+        pts = start;
+        timeStart = start;
+        fts = start;
+        tte = start;
+        paused = false;
+        x = 45;
+        planeIndex = 4;
     }
 
     public void drawPlansAndShipsAndHomes(GL gl) {
@@ -350,7 +385,6 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
     }
 
     public void handleKeyPress() {
-
         if (isKeyPressed(KeyEvent.VK_LEFT)) {
             if (x > 20) {
                 x -= 3;
@@ -383,7 +417,6 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
         }
     }
 
-    public BitSet keyBits = new BitSet(256);
 
     @Override
     public void keyPressed(final KeyEvent event) {

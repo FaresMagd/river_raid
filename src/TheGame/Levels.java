@@ -20,15 +20,6 @@ public class Levels extends JFrame implements ActionListener {
     JButton EASY, NORMAL, HARD, BACK, MULTIPLAYER;
 
     public Levels() {
-
-        GLCanvas glcanvas;
-
-        RiverRaidGLEventListener listener = new RiverRaidGLEventListener();
-        glcanvas = new GLCanvas();
-        glcanvas.addGLEventListener(listener);
-        glcanvas.addKeyListener(listener);
-        getContentPane().add(glcanvas, BorderLayout.CENTER);
-
         // The Buttons:
         EASY = new JButton("EASY");
         NORMAL = new JButton("NORMAL");
@@ -104,7 +95,7 @@ public class Levels extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
         setVisible(true);
         setFocusable(true);
-        glcanvas.requestFocus();
+
     }
 
     @Override

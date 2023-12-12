@@ -27,23 +27,16 @@ public class RiverRaid extends JFrame implements ActionListener {
 
         GLCanvas glcanvas;
         Animator animator;
-
-        RiverRaidGLEventListener listener = new RiverRaidGLEventListener();
-        glcanvas = new GLCanvas();
-        glcanvas.addGLEventListener(listener);
-        glcanvas.addKeyListener(listener);
-        getContentPane().add(glcanvas, BorderLayout.CENTER);
         animator = new FPSAnimator(25);
-        animator.add(glcanvas);
         animator.start();
 
 
         try {
-            AUDIO_STREAM = AudioSystem.getAudioInputStream(new File("src/Assets/commercial-aircraft-in-flight-announcement-5-17499.wav"));
-            CLIP = AudioSystem.getClip();
-            CLIP.open(AUDIO_STREAM);
-            CLIP.loop(7);
-            CLIP.start();
+//            AUDIO_STREAM = AudioSystem.getAudioInputStream(new File("src/Assets/commercial-aircraft-in-flight-announcement-5-17499.wav"));
+//            CLIP = AudioSystem.getClip();
+//            CLIP.open(AUDIO_STREAM);
+//            CLIP.loop(7);
+//            CLIP.start();
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
@@ -117,14 +110,12 @@ public class RiverRaid extends JFrame implements ActionListener {
         HIGH_SCORE.addActionListener(this);
         HIGH_SCORE.setFocusable(false);
 
-
         setTitle("River Raid Menu");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(700, 800);
         setLocationRelativeTo(null);
         setVisible(true);
         setFocusable(true);
-        glcanvas.requestFocus();
         this.setResizable(false);
     }
 

@@ -12,6 +12,9 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -28,6 +31,8 @@ import static Config.Constants.*;
 
 public class RiverRaidGLEventListener extends KeyHandling implements GLEventListener {
     JFrame gameJframe;
+    AudioInputStream AUDIO_STREAM;
+    Clip CLIP;
     GameState gameState;
     GameState firstPlayer , SecondPlayer;
     public void setGameJframe(JFrame gameJframe) {
@@ -235,7 +240,7 @@ public class RiverRaidGLEventListener extends KeyHandling implements GLEventList
         if (this.gameState.tte - this.gameState.tts > 400) {
             this.gameState.tts = this.gameState.tte;
 
-            this.gameState.tank -= 1;
+            this.gameState.tank -= (int) (Math.random()*3+1);
             this.gameState.tank = Math.max(this.gameState.tank, 0);
         }
     }
@@ -247,7 +252,14 @@ public class RiverRaidGLEventListener extends KeyHandling implements GLEventList
     }
 
     public void crashed() {
-
+        try {
+            AUDIO_STREAM = AudioSystem.getAudioInputStream(new File("src/Assets/crash-7075.wav"));
+            CLIP = AudioSystem.getClip();
+            CLIP.open(AUDIO_STREAM);
+            CLIP.start();
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+        }
         this.gameState.x = 45;
         this.gameState.y = 10;
         this.gameState.tank = 100;
@@ -468,6 +480,15 @@ public class RiverRaidGLEventListener extends KeyHandling implements GLEventList
                 this.gameState.xBullet = this.gameState.x;
                 this.gameState.yBullet = 10;
                 this.gameState.fired = true;
+                try {
+                    AUDIO_STREAM = AudioSystem.getAudioInputStream(new File("src/Assets/GunShot.wav"));
+                    CLIP = AudioSystem.getClip();
+                    CLIP.open(AUDIO_STREAM);
+                    CLIP.start();
+                } catch (Exception ex) {
+                    System.err.println(ex.getMessage());
+                }
+
             }
         }
         if (isKeyPressed(KeyEvent.VK_UP)) {

@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import javax.media.opengl.*;
 import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -33,11 +34,11 @@ public class RiverRaid extends JFrame implements ActionListener {
 
 
         try {
-//            AUDIO_STREAM = AudioSystem.getAudioInputStream(new File("src/Assets/commercial-aircraft-in-flight-announcement-5-17499.wav"));
-//            CLIP = AudioSystem.getClip();
-//            CLIP.open(AUDIO_STREAM);
-//            CLIP.loop(7);
-//            CLIP.start();
+            AUDIO_STREAM = AudioSystem.getAudioInputStream(new File("src/Assets/commercial-aircraft-in-flight-announcement-5-17499.wav"));
+            CLIP = AudioSystem.getClip();
+            CLIP.open(AUDIO_STREAM);
+            CLIP.loop(7);
+            CLIP.start();
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }

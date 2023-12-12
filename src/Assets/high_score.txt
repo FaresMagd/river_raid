@@ -1,5 +1,5 @@
-hello  50
-hello 50
-asdasdas 0  0  0  0  0
-asdasdas 0  0  0  0
-asdasdas 0  0  0
+HASSAN  2100
+Hassan   550
+test    300
+test     200
+hassan 50

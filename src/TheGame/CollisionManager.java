@@ -74,7 +74,7 @@ public class CollisionManager {
         }
         for (GameObject full : g.gameState.fulls) {
             if (g.gameState.x > full.x - 2 && g.gameState.x < full.x + 2 && g.gameState.y > full.y - 8 && g.gameState.y < full.y + 5) {
-                g.gameState.tank += 2;
+                g.gameState.tank += 6;
                 g.gameState.tank = Math.min(g.gameState.tank, 100);
 
             }

@@ -1,8 +1,6 @@
 package TheGame;
 
-
 public class Destroy {
-
 
     public static void remove(RiverRaidGLEventListener g) {
         int i = 0;
@@ -27,6 +25,12 @@ public class Destroy {
             i++;
         }
         i = 0;
+        while (i < g.fulls.size()) {
+            if (g.fulls.get(i).remove) {
+                g.fulls.remove(i);
+            }
+            i++;
+        }
 
     }
 
@@ -70,6 +74,13 @@ public class Destroy {
             if (g.x > full.x - 2 && g.x < full.x + 2 && g.y > full.y - 8 && g.y < full.y + 5) {
                 g.tank += 2;
                 g.tank = Math.min(g.tank, 100);
+
+            }
+            if (g.xBullet > full.x - 2 && g.xBullet < full.x + 2 && g.yBullet > full.y - 8 && g.yBullet < full.y + 5) {
+                full.remove = true;
+                g.fired = false;
+                g.score += 100;
+
             }
         }
     }

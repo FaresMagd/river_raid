@@ -1,6 +1,5 @@
 package TheGame;
 
-
 import Texture.TextureReader;
 import com.sun.opengl.util.GLUT;
 import com.sun.opengl.util.j2d.TextRenderer;
@@ -13,7 +12,6 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.BitSet;
-
 
 public class RiverRaidGLEventListener extends RiverRaidListener {
 
@@ -28,6 +26,7 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
     int yBullet;
     boolean paused;
     int starttemp;
+    boolean flag;
     long timeStart;
     long currentTime;
     int speed;
@@ -46,19 +45,19 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
     int maxWidth = 100;
     int maxHeight = 100;
     int x = 45, y = 10;
-    String[] textureNames = {"Eboot.png", "Eplane.png", "back.png", "plane_left.png", "plane_normal.png", "plane_right.png", "house.png", "bullet.png", "full.png", "startback.png"};
+    String[] textureNames = { "Eboot.png", "Eplane.png", "back22.png", "plane_left.png", "plane_normal.png",
+            "plane_right.png", "house.png", "bullet.png", "full.png", "startback.png" };
     TextureReader.Texture[] texture = new TextureReader.Texture[textureNames.length];
     int[] textures = new int[textureNames.length];
 
     TextRenderer textRenderer = new TextRenderer(new Font("SansSerif", Font.PLAIN, 24));
 
-
     @Override
     public void init(GLAutoDrawable gld) {
         GL gl = gld.getGL();
-        gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);    //This Will Clear The Background Color To Black
+        gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // This Will Clear The Background Color To Black
 
-        gl.glEnable(GL.GL_TEXTURE_2D);  // Enable Texture Mapping
+        gl.glEnable(GL.GL_TEXTURE_2D); // Enable Texture Mapping
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
         gl.glGenTextures(textureNames.length, textures, 0);
 
@@ -67,7 +66,7 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
                 texture[i] = TextureReader.readTexture(assetsFolderName + "//" + textureNames[i], true);
                 gl.glBindTexture(GL.GL_TEXTURE_2D, textures[i]);
 
-//                mipmapsFromPNG(gl, new GLU(), texture[i]);
+                // mipmapsFromPNG(gl, new GLU(), texture[i]);
                 new GLU().gluBuild2DMipmaps(
                         GL.GL_TEXTURE_2D,
                         GL.GL_RGBA, // Internal Texel Format,
@@ -93,7 +92,7 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
     @Override
     public void display(GLAutoDrawable gld) {
         GL gl = gld.getGL();
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT);       //Clear The Screen And The Depth Buffer
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT); // Clear The Screen And The Depth Buffer
         gl.glLoadIdentity();
         setPaused();
         DrawBackground(gl);
@@ -110,11 +109,11 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
             Destroy.remove(this);
             emptyTank();
         }
-
         drawPlansAndShipsAndHomes(gl);
         DrawSprite(gl, x, y, planeIndex, 0.8F, 0);
 
-        if (lives > 0) currentTime = System.currentTimeMillis();
+        if (lives > 0)
+            currentTime = System.currentTimeMillis();
         gl.glRasterPos2f(-.8f, .9f);
         g.glutBitmapString(5, "Score ");
         g.glutBitmapString(5, Integer.toString(score));
@@ -125,15 +124,16 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
         g.glutBitmapString(5, " s");
 
         gl.glRasterPos2f(-.8f, .7f);
-        g.glutBitmapString(5, "Lives  ");
+        g.glutBitmapString(5, "lives  ");
         g.glutBitmapString(5, Integer.toString(lives));
 
         gl.glRasterPos2f(-.8f, .6f);
-        g.glutBitmapString(5, "Tank  ");
+        g.glutBitmapString(5, "tank  ");
         g.glutBitmapString(5, Integer.toString(tank));
         gl.glEnd();
         gl.glRasterPos2f(-.8f, .84f);
-        if (speed < 10) speed = 2 + score / 4000;
+        if (speed < 10)
+            speed = 2 + score / 4000;
         starttemp++;
         starttemp = Math.min(starttemp, 150);
         if (fired) {
@@ -153,14 +153,14 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
 
     public void DrawSprite(GL gl, int x, int y, int index, float scale, float angle) {
         gl.glEnable(GL.GL_BLEND);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);    // Turn Blending On
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]); // Turn Blending On
 
         gl.glPushMatrix();
         gl.glTranslated(x / (maxWidth / 2.0) - 0.9, y / (maxHeight / 2.0) - 0.9, 0);
         gl.glRotatef(angle, 0, 1, 0);
 
         gl.glScaled(0.1 * scale, 0.1 * scale, 1);
-        //System.out.println(x + " " + y);
+        // System.out.println(x + " " + y);
         gl.glBegin(GL.GL_QUADS);
         // Front Face
         gl.glTexCoord2f(0.0f, 0.0f);
@@ -177,10 +177,9 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
         gl.glDisable(GL.GL_BLEND);
     }
 
-
     public void DrawBackground(GL gl) {
         gl.glEnable(GL.GL_BLEND);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[2]);    // Turn Blending On
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[2]); // Turn Blending On
 
         gl.glPushMatrix();
         gl.glBegin(GL.GL_QUADS);
@@ -256,7 +255,8 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
             paused = true;
 
         }
-        starttemp = 0;
+        if (lives > 0)
+            starttemp = 0;
 
     }
 
@@ -274,7 +274,6 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
         for (Object1 full : fulls) {
             DrawSprite(gl, full.x, full.y, 8, 1, full.left ? 0 : 180);
         }
-
 
     }
 
@@ -345,13 +344,10 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
                 full.remove = true;
             }
         }
-
-
         if (fired) {
             yBullet += 10;
         }
     }
-
 
     public void handleKeyPress() {
 
@@ -379,7 +375,6 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
             speed = speed + 2;
         }
 
-
     }
 
     public void setPaused() {
@@ -390,12 +385,10 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
 
     public BitSet keyBits = new BitSet(256);
 
-
     @Override
     public void keyPressed(final KeyEvent event) {
         int keyCode = event.getKeyCode();
         keyBits.set(keyCode);
-
 
     }
 
@@ -414,6 +407,4 @@ public class RiverRaidGLEventListener extends RiverRaidListener {
         // don't care
     }
 
-
 }
-
